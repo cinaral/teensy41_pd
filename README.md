@@ -31,7 +31,7 @@ This is a PD controller project intended to command a Teensy 4.1 microcontroller
    
    Navigate to the ```teensy41_udp/``` or the project folder on the Raspberry Pi, which should look like (Expand the details to display):
    
-<details open>
+<details>
 
 ```
 │teensy41_pd/
