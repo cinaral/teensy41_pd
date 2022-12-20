@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "shared"
+		},
+		{
+			"path": "teensy"
+		},
+		{
+			"path": "rasppi"
+		},
+		{
+			"path": "matlab"
+		}
+	],
+	"settings": {
+		"autoHide.autoHidePanel": true,
+		"autoHide.autoHideSideBar": false
+	}
+}
