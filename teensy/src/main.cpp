@@ -39,7 +39,7 @@ bool did_interrupt_begin; //* flag for interrupt begin
 
 config::Flag flag[config::flag_dim]; //* flag buffer
 float val_arr[config::val_dim];      //*value buffer
-uint32_t t_idx;                      //* time index
+long long unsigned t_idx;            //* time index
 float t;                             //* time
 float x;                             //* motor position
 float x_f;                           //* filtered motor position
@@ -48,9 +48,9 @@ float u;                             //* control output
 float r;                             //* reference to track
 float K_p;                           //* proportional gain
 float K_d;                           //* derivative gain
-uint32_t max_sample_us;              //* maximum sample time
-float pos_prev;                      //* previous position (this could be handled by the pid controller)
-float u_prev;                        //* previous control (this could be handled by the pid controller)
+long long unsigned max_sample_us;    //* maximum sample time
+float error_prev = 0;                //* previous position (this could be handled by the pid controller)
+float u_prev = 0;                    //* previous control (this could be handled by the pid controller)
 
 Encoder encoder(config::enc_A_pin, config::enc_B_pin);
 MotorDriver driver(config::PWM_pin, config::CW_pin, config::CCW_pin, &encoder, config::encoder_PPR,
@@ -63,7 +63,7 @@ void handle_state_change();
 void reset_fun();
 void standby_fun();
 void track_fun();
-void control_fun(const float pos_next, const float pos_desired, float *input_volt_next);
+void control_fun(const float pos_next, const float pos_desired, float *u_ptr);
 
 //* Setup
 void
@@ -115,34 +115,48 @@ handle_commands()
 		*/
 
 		switch (flag[0]) {
-		case config::Flag::stop:
+		case config::Flag::stop: {
 			sample_interrupt.end();
 			cmd_state = config::State::standby;
 			break;
-		case config::Flag::reset:
+		}
+		case config::Flag::reset: {
 			reset_fun();
 			break;
-		case config::Flag::track:
+		}
+		case config::Flag::track: {
 			cmd_state = config::State::track;
 			r = val_arr[0];
 			break;
-		case config::Flag::set_r:
+		}
+		case config::Flag::set_r: {
 			r = val_arr[0];
 			break;
-		case config::Flag::set_K_p:
+		}
+		case config::Flag::set_K_p: {
 			K_p = val_arr[0];
 			break;
-		case config::Flag::set_K_d:
+		}
+		case config::Flag::set_K_d: {
 			K_d = val_arr[0];
 			break;
-		case config::Flag::echo:
-			config::Flag flag_sent[config::flag_dim] = {config::Flag::echo_resp};
-			float val_sent[config::val_dim] = {static_cast<float>(t_idx),        t, x, u, r, K_p, K_d,
-			                                   static_cast<float>(max_sample_us)};
+		}
+		case config::Flag::echo: {
+			const config::Flag flag_sent[config::flag_dim] = {config::Flag::echo_resp};
+			const float val_sent[config::val_dim] = {static_cast<float>(t_idx),        t, x, u, r, K_p, K_d,
+			                                         static_cast<float>(max_sample_us)};
 			udp.write(flag_sent, val_sent);
 			break;
-		default:
+		}
+		case config::Flag::interrupt_begin: {
 			break;
+		}
+		case config::Flag::echo_resp: {
+			break;
+		}
+		default: {
+			break;
+		}
 		}
 	}
 }
@@ -229,10 +243,11 @@ track_fun()
 
 //* Controller
 void
-control_fun(const float pos, const float desired_pos, float *const u)
+control_fun(const float pos, const float desired_pos, float *u_ptr)
 {
-	pid_control::PDF<1>(config::sample_step, config::filter_step, &K_p, &K_d, &pos_prev, &pos, &u_prev,
-	                                u);
-	pos_prev = pos;
-	u_prev = *u;
+	const float error = pos - desired_pos; //* error
+	pid_control::PDF<config::u_dim>(config::sample_step, config::filter_step, &K_p, &K_d, &error_prev, &error,
+	                                &u_prev, u_ptr);
+	error_prev = error;
+	u_prev = *u_ptr;
 }

@@ -58,6 +58,7 @@ constexpr unsigned analog_resolution = 10; //* number of bits
 constexpr unsigned PWM_resolution = static_cast<int>(std::pow(2, analog_resolution) - 1); //* resolution of PWM
 
 //* Controller configuration
+constexpr unsigned u_dim = 1; //* number of dimensions of the control input
 constexpr unsigned standby_LED_delay_ms = 500; //* [ms]
 constexpr unsigned sample_freq = 1e3;          //* [hz]
 constexpr float sample_step = 1. / static_cast<float>(sample_freq);

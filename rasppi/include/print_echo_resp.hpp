@@ -58,35 +58,43 @@ print_echo_resp(config::Flag flag_recv[config::flag_dim], float val_recv[config:
 
 			//* print known flags
 			switch (i) {
-			case 0:
+			case 0: {
 				printf("%16s", "t_idx");
 				break;
-			case 1:
+			}
+			case 1: {
 				printf("%16s", "t");
 				break;
-			case 2:
+			}
+			case 2: {
 				printf("%16s", "x");
 				break;
-			case 3:
+			}
+			case 3: {
 				printf("%16s", "u");
 				break;
-			case 4:
+			}
+			case 4: {
 				printf("%16s", "r");
 				break;
-			case 5:
+			}
+			case 5: {
 				printf("%16s", "K_p");
 				break;
-			case 6:
+			}
+			case 6: {
 				printf("%16s", "K_d");
 				break;
-			case 7:
+			}
+			case 7: {
 				printf("%16s", "max_sample_us");
 				break;
-			default:
+			}
+			default: {
 				no_match = true;
 				break;
 			}
-
+			}
 			if (!no_match) {
 				printf(": %g\n", val_recv[i]);
 			}
