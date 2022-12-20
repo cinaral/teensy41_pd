@@ -63,6 +63,7 @@ constexpr unsigned sample_freq = 1e3;          //* [hz]
 constexpr float sample_step = 1. / static_cast<float>(sample_freq);
 constexpr int sample_step_us = static_cast<int>(one_sec_in_us * sample_step); //* [us]
 constexpr float alpha_pos_pred_motor = 200;
+constexpr float filter_step = sample_step * 10;
 constexpr float pos_filter_const = 250;
 constexpr float vel_filter_const = 250;
 constexpr float pos_min = -M_PI;

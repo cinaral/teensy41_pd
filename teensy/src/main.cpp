@@ -1,5 +1,5 @@
 /*
- * teensy_pd/teensy
+ * teensy-pd_control-udp/teensy
  *
  * MIT License
  *
@@ -27,7 +27,7 @@
 #include "MotorDriver.hpp"
 #include "UdpHandler.hpp"
 #include "config.hpp"
-#include "fn_PDcontroller.h"
+#include "pid_control.hpp"
 #include <Arduino.h>
 
 IntervalTimer sample_interrupt;  //* interrupts
@@ -49,6 +49,8 @@ float r;                             //* reference to track
 float K_p;                           //* proportional gain
 float K_d;                           //* derivative gain
 uint32_t max_sample_us;              //* maximum sample time
+float pos_prev;                      //* previous position (this could be handled by the pid controller)
+float u_prev;                        //* previous control (this could be handled by the pid controller)
 
 Encoder encoder(config::enc_A_pin, config::enc_B_pin);
 MotorDriver driver(config::PWM_pin, config::CW_pin, config::CCW_pin, &encoder, config::encoder_PPR,
@@ -229,7 +231,8 @@ track_fun()
 void
 control_fun(const float pos, const float desired_pos, float *const u)
 {
-	codegen::fn_PDcontroller(pos, desired_pos, config::pos_min, config::pos_max, config::sample_step,
-	                         config::pos_filter_const, config::vel_filter_const, config::alpha_pos_pred_motor, K_p,
-	                         K_d, config::cur_min, config::cur_max, u, &x_f, &dt__x);
+	pid_control::PDF<1>(config::sample_step, config::filter_step, &K_p, &K_d, &pos_prev, &pos, &u_prev,
+	                                u);
+	pos_prev = pos;
+	u_prev = *u;
 }

@@ -2,6 +2,8 @@
 
 #* project's relative path with respect to this script
 PROJECT_PATH=../../..
+
+#* modify this line for your Teensy 4.1 devices
 SerialNumbers="11462940"
 
 #*  change the cwd to the script dir temporarily, and hide pushd popd output

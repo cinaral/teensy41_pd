@@ -27,6 +27,8 @@ if [ "$#" -lt 1 ]; then
 else
 	echo "Syncing to $1..."
 	rsync -aR \
+		./LICENSE \
+		./README.md \
 		$shared_dir/include/config.hpp \
 		$shared_dir/README.md \
 		$teensy_dir/.pio/build/teensy41/firmware.hex \
@@ -35,7 +37,6 @@ else
 		$rasppi_dir/scripts/ \
 		$rasppi_dir/include/ \
 		$rasppi_dir/src/ \
-		$rasppi_dir/test/ \
 		$rasppi_dir/CMakeLists.txt/ \
 		$rasppi_dir/README.md \
 		$1/
