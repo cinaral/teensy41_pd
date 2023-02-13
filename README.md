@@ -155,3 +155,7 @@ Sent 0x30: 0 to 192.168.1.10:11337
 $ rasppi/build/bin/send_udp 192.168.1.22 -f 2 -v 1-p 6667
 Sent 0x32: 1 to 192.168.1.10:6667
 ```
+
+## Acknowledgements
+
+This work was supported by the National Science Foundation DCSD Grant (No. 2029181).
