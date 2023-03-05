@@ -43,7 +43,7 @@ long long unsigned t_idx;            //* time index
 float t;                             //* time
 float x;                             //* motor position
 float x_f;                           //* filtered motor position
-float dt__x;                         //* motor velocity
+float dt_x;                          //* motor velocity
 float u;                             //* control output
 float r;                             //* reference to track
 float K_p;                           //* proportional gain
@@ -201,7 +201,7 @@ reset_fun()
 	t = 0;
 	x = 0;
 	x_f = 0;
-	dt__x = 0;
+	dt_x = 0;
 	u = 0;
 	r = 0;
 	K_p = config::K_p_0;
